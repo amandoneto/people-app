@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "employee-app": {
+    "people-app": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -61,10 +61,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "employee-app:build:production"
+              "buildTarget": "people-app:build:production"
             },
             "development": {
-              "buildTarget": "employee-app:build:development"
+              "buildTarget": "people-app:build:development"
             }
           },
           "defaultConfiguration": "development"

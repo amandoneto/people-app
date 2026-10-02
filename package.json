@@ -1,5 +1,5 @@
 {
-  "name": "employee-app",
+  "name": "people-app",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:employee-app": "node dist/employee-app/server/server.mjs"
+    "serve:ssr:people-app": "node dist/people-app/server/server.mjs"
   },
   "prettier": {
     "printWidth": 100,

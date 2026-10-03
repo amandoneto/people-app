@@ -12,6 +12,10 @@ function enterValue(fixture: ComponentFixture<App>, selector: string, value: str
 
 describe('App', () => {
   beforeEach(async () => {
+    localStorage.removeItem('people-app-theme');
+    document.documentElement.classList.remove('dark');
+    document.documentElement.style.colorScheme = '';
+
     await TestBed.configureTestingModule({
       imports: [App],
       providers: [provideZonelessChangeDetection()]
@@ -95,10 +99,41 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     const registerButton = fixture.nativeElement.querySelector(
-      'button[type="button"]',
+      'section button[type="button"]',
     ) as HTMLButtonElement;
 
     expect(registerButton.textContent).toContain('Register');
     expect(registerButton.type).toBe('button');
+  });
+
+  it('should restore the saved theme on startup', () => {
+    localStorage.setItem('people-app-theme', 'dark');
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+
+    const themeSwitch = fixture.nativeElement.querySelector('[role="switch"]') as HTMLButtonElement;
+    expect(themeSwitch.getAttribute('aria-checked')).toBe('true');
+    expect(document.documentElement.classList.contains('dark')).toBeTrue();
+    expect(document.documentElement.style.colorScheme).toBe('dark');
+  });
+
+  it('should toggle and persist the theme', () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+
+    const themeSwitch = fixture.nativeElement.querySelector('[role="switch"]') as HTMLButtonElement;
+    themeSwitch.click();
+    fixture.detectChanges();
+
+    expect(themeSwitch.getAttribute('aria-checked')).toBe('true');
+    expect(localStorage.getItem('people-app-theme')).toBe('dark');
+    expect(document.documentElement.classList.contains('dark')).toBeTrue();
+
+    themeSwitch.click();
+    fixture.detectChanges();
+
+    expect(themeSwitch.getAttribute('aria-checked')).toBe('false');
+    expect(localStorage.getItem('people-app-theme')).toBe('light');
+    expect(document.documentElement.classList.contains('dark')).toBeFalse();
   });
 });

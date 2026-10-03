@@ -23,6 +23,11 @@ description: You are an expert in TypeScript, Angular, and scalable web applicat
 - Prefer responsive, state, and accessibility variants provided by Tailwind over custom CSS when they express the design clearly.
 - Use component stylesheets for styles that cannot be expressed cleanly with Tailwind utilities; avoid duplicating Tailwind rules in custom CSS.
 - Keep class lists readable and preserve consistent spacing, color, and typography choices across the application.
+## UI Components
+- Use shadcn/ui as the default component system and design reference for UI work. Prefer its reusable primitives and patterns for buttons, fields, cards, dialogs, and other common controls instead of rebuilding those controls ad hoc in feature templates.
+- Use an Angular-compatible shadcn implementation already present in the project when available. Do not import React shadcn/ui components into Angular code.
+- If no Angular-compatible shadcn components are installed, build only the shadcn-style Angular primitives needed for the requested UI using the project's Tailwind setup, native Angular templates, and accessible HTML semantics. Keep reusable primitives separate from feature components; do not add a component library dependency unless the task requires it.
+- Preserve the shadcn component API and interaction patterns where practical, including variants, sizes, disabled/focus states, labels, descriptions, and validation states.
 ### Components
 - Keep components small and focused on a single responsibility
 - Use `input()` and `output()` functions instead of decorators
@@ -49,3 +54,4 @@ description: You are an expert in TypeScript, Angular, and scalable web applicat
 - Design services around a single responsibility
 - Use the `providedIn: 'root'` option for singleton services
 - Use the `inject()` function instead of constructor injection
+- Follow the [Angular Service Structure Rule](./rules/service-structure.md) when placing services and domain code.

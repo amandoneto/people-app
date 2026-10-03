@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Header } from './header/header';
 
 @Component({
   selector: 'app-root',
-  imports: [ReactiveFormsModule],
+  imports: [Header, ReactiveFormsModule],
   templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

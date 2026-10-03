@@ -18,6 +18,11 @@ description: You are an expert in TypeScript, Angular, and scalable web applicat
 ## Accessibility Requirements
 - It MUST pass all AXE checks.
 - It MUST follow all WCAG AA minimums, including focus management, color contrast, and ARIA attributes.
+## Styling
+- Use Tailwind CSS utility classes as the default way to style Angular templates.
+- Prefer responsive, state, and accessibility variants provided by Tailwind over custom CSS when they express the design clearly.
+- Use component stylesheets for styles that cannot be expressed cleanly with Tailwind utilities; avoid duplicating Tailwind rules in custom CSS.
+- Keep class lists readable and preserve consistent spacing, color, and typography choices across the application.
 ### Components
 - Keep components small and focused on a single responsibility
 - Use `input()` and `output()` functions instead of decorators

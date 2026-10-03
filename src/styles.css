@@ -103,11 +103,25 @@
 
 /* 3. Reset Global da Aplicação */
 @layer base {
+    html,
+    body {
+        min-height: 100%;
+    }
+
     * {
         @apply border-border;
     }
 
     body {
-        @apply bg-background text-foreground;
+        @apply bg-background text-foreground antialiased;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
     }
 }

@@ -1,8 +1,12 @@
 import { provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
 import { App } from './app';
+import { routes } from './app.routes';
+import { Login } from './features/login/login';
 
-function enterValue(fixture: ComponentFixture<App>, selector: string, value: string): void {
+function enterValue(fixture: ComponentFixture<Login>, selector: string, value: string): void {
   const input = fixture.nativeElement.querySelector(selector) as HTMLInputElement;
   input.value = value;
   input.dispatchEvent(new Event('input'));
@@ -11,25 +15,36 @@ function enterValue(fixture: ComponentFixture<App>, selector: string, value: str
 }
 
 describe('App', () => {
+  function createAppFixture(): ComponentFixture<App> {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+    return fixture;
+  }
+
+  function createLoginFixture(): ComponentFixture<Login> {
+    const fixture = TestBed.createComponent(Login);
+    fixture.detectChanges();
+    return fixture;
+  }
+
   beforeEach(async () => {
     localStorage.removeItem('people-app-theme');
     document.documentElement.classList.remove('dark');
     document.documentElement.style.colorScheme = '';
 
     await TestBed.configureTestingModule({
-      imports: [App],
-      providers: [provideZonelessChangeDetection()]
+      imports: [App, Login],
+      providers: [provideZonelessChangeDetection(), provideRouter(routes), provideHttpClient()]
     }).compileComponents();
   });
 
   it('should create the app', () => {
-    const fixture = TestBed.createComponent(App);
+    const fixture = createAppFixture();
     expect(fixture.componentInstance).toBeTruthy();
   });
 
   it('should render the login form with submit disabled until the fields are valid', () => {
-    const fixture = TestBed.createComponent(App);
-    fixture.detectChanges();
+    const fixture = createLoginFixture();
     const compiled = fixture.nativeElement as HTMLElement;
 
     expect(compiled.querySelector('h1')?.textContent).toContain('Welcome back');
@@ -44,8 +59,7 @@ describe('App', () => {
   });
 
   it('should validate email format and the 150-character limit', () => {
-    const fixture = TestBed.createComponent(App);
-    fixture.detectChanges();
+    const fixture = createLoginFixture();
 
     enterValue(fixture, 'input[type="email"]', 'not-an-email');
     expect(fixture.nativeElement.querySelector('[role="alert"]')?.textContent).toContain(
@@ -73,8 +87,7 @@ describe('App', () => {
   });
 
   it('should validate password length and allowed characters', () => {
-    const fixture = TestBed.createComponent(App);
-    fixture.detectChanges();
+    const fixture = createLoginFixture();
 
     enterValue(fixture, 'input[type="password"]', 'Abc123!');
     expect(fixture.nativeElement.querySelector('[role="alert"]')?.textContent).toContain(
@@ -95,21 +108,19 @@ describe('App', () => {
     expect(fixture.nativeElement.querySelector('[role="alert"]')).toBeNull();
   });
 
-  it('should render a registration button that does not submit the form', () => {
-    const fixture = TestBed.createComponent(App);
-    fixture.detectChanges();
-    const registerButton = fixture.nativeElement.querySelector(
-      'section button[type="button"]',
-    ) as HTMLButtonElement;
+  it('should provide a link to employee registration', () => {
+    const fixture = createLoginFixture();
+    const registerLink = fixture.nativeElement.querySelector(
+      'section a[routerLink="/register"]',
+    ) as HTMLAnchorElement;
 
-    expect(registerButton.textContent).toContain('Register');
-    expect(registerButton.type).toBe('button');
+    expect(registerLink.textContent).toContain('Register');
+    expect(registerLink.getAttribute('href')).toBe('/register');
   });
 
   it('should restore the saved theme on startup', () => {
     localStorage.setItem('people-app-theme', 'dark');
-    const fixture = TestBed.createComponent(App);
-    fixture.detectChanges();
+    const fixture = createAppFixture();
 
     const themeSwitch = fixture.nativeElement.querySelector('[role="switch"]') as HTMLButtonElement;
     expect(themeSwitch.getAttribute('aria-checked')).toBe('true');
@@ -118,8 +129,7 @@ describe('App', () => {
   });
 
   it('should toggle and persist the theme', () => {
-    const fixture = TestBed.createComponent(App);
-    fixture.detectChanges();
+    const fixture = createAppFixture();
 
     const themeSwitch = fixture.nativeElement.querySelector('[role="switch"]') as HTMLButtonElement;
     themeSwitch.click();

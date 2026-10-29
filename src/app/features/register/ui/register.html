@@ -1,0 +1,187 @@
+<main class="grid min-h-[calc(100vh-4rem)] place-items-center px-5 py-8">
+  <section
+    class="w-[min(100%,38rem)] rounded-2xl border border-border bg-card p-8 shadow-lg shadow-foreground/5 sm:p-10"
+    aria-labelledby="register-title"
+  >
+    <p class="mb-2 text-xs font-bold tracking-[0.13em] text-foreground">PEOPLE APP</p>
+    <h1 id="register-title" class="text-[clamp(1.8rem,6vw,2.1rem)] leading-tight font-bold tracking-[-0.045em] text-foreground">
+      Create your account
+    </h1>
+    <p class="mt-2 mb-7 text-[0.95rem] text-muted-foreground">Register a new employee.</p>
+
+    @if (submissionMessage()) {
+      <p
+        class="mb-5 rounded-[0.65rem] border px-3.5 py-3 text-sm leading-relaxed"
+        [class.border-destructive]="submissionFailed()"
+        [class.bg-destructive/10]="submissionFailed()"
+        [class.text-destructive]="submissionFailed()"
+        [class.border-primary/30]="!submissionFailed()"
+        [class.bg-primary/10]="!submissionFailed()"
+        [class.text-foreground]="!submissionFailed()"
+        [attr.role]="submissionFailed() ? 'alert' : 'status'"
+      >
+        {{ submissionMessage() }}
+      </p>
+    }
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
+      <div class="mb-5 flex flex-col gap-2">
+        <label for="name" class="text-sm font-semibold text-foreground">Name</label>
+        <input
+          id="name"
+          type="text"
+          formControlName="name"
+          autocomplete="name"
+          maxlength="150"
+          [attr.aria-invalid]="registerForm.controls.name.invalid && registerForm.controls.name.touched ? 'true' : null"
+          [attr.aria-describedby]="registerForm.controls.name.invalid && registerForm.controls.name.touched ? 'name-error' : null"
+          class="min-h-12 w-full rounded-[0.65rem] border border-input bg-background px-3.5 py-3 text-[0.925rem] text-foreground placeholder:text-muted-foreground hover:border-ring focus-visible:border-ring focus-visible:outline-3 focus-visible:outline-offset-1 focus-visible:outline-ring/20 aria-invalid:border-destructive"
+        />
+        @if (registerForm.controls.name.invalid && registerForm.controls.name.touched) {
+          <span class="text-xs text-destructive" id="name-error">
+            @if (registerForm.controls.name.hasError('required')) {
+              Name is required.
+            } @else if (registerForm.controls.name.hasError('maxlength')) {
+              Name must be 150 characters or fewer.
+            } @else if (registerForm.controls.name.hasError('pattern')) {
+              Name must start with a letter and contain only letters and spaces.
+            }
+          </span>
+        }
+      </div>
+
+      <div class="mb-5 flex flex-col gap-2">
+        <label for="email" class="text-sm font-semibold text-foreground">Email</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          autocomplete="email"
+          maxlength="150"
+          placeholder="you@example.com"
+          [attr.aria-invalid]="registerForm.controls.email.invalid && registerForm.controls.email.touched ? 'true' : null"
+          [attr.aria-describedby]="registerForm.controls.email.invalid && registerForm.controls.email.touched ? 'email-error' : null"
+          class="min-h-12 w-full rounded-[0.65rem] border border-input bg-background px-3.5 py-3 text-[0.925rem] text-foreground placeholder:text-muted-foreground hover:border-ring focus-visible:border-ring focus-visible:outline-3 focus-visible:outline-offset-1 focus-visible:outline-ring/20 aria-invalid:border-destructive"
+        />
+        @if (registerForm.controls.email.invalid && registerForm.controls.email.touched) {
+          <span class="text-xs text-destructive" id="email-error">
+            @if (registerForm.controls.email.hasError('required')) {
+              Email is required.
+            } @else if (registerForm.controls.email.hasError('maxlength')) {
+              Email must be 150 characters or fewer.
+            } @else if (registerForm.controls.email.hasError('email')) {
+              Enter a valid email address.
+            }
+          </span>
+        }
+      </div>
+
+      <div class="mb-5 grid gap-5 sm:grid-cols-2">
+        <div class="flex flex-col gap-2">
+          <label for="role" class="text-sm font-semibold text-foreground">Role</label>
+          <select
+            id="role"
+            formControlName="role"
+            [attr.aria-invalid]="registerForm.controls.role.invalid && registerForm.controls.role.touched ? 'true' : null"
+            [attr.aria-describedby]="registerForm.controls.role.invalid && registerForm.controls.role.touched ? 'role-error' : null"
+            class="min-h-12 w-full rounded-[0.65rem] border border-input bg-background px-3.5 py-3 text-[0.925rem] text-foreground focus-visible:border-ring focus-visible:outline-3 focus-visible:outline-offset-1 focus-visible:outline-ring/20"
+          >
+            <option value="user">user</option>
+          </select>
+          @if (registerForm.controls.role.invalid && registerForm.controls.role.touched) {
+            <span class="text-xs text-destructive" id="role-error">Role is required.</span>
+          }
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label for="seniority" class="text-sm font-semibold text-foreground">Seniority</label>
+          <select
+            id="seniority"
+            formControlName="seniority"
+            [attr.aria-invalid]="registerForm.controls.seniority.invalid && registerForm.controls.seniority.touched ? 'true' : null"
+            [attr.aria-describedby]="registerForm.controls.seniority.invalid && registerForm.controls.seniority.touched ? 'seniority-error' : null"
+            class="min-h-12 w-full rounded-[0.65rem] border border-input bg-background px-3.5 py-3 text-[0.925rem] text-foreground focus-visible:border-ring focus-visible:outline-3 focus-visible:outline-offset-1 focus-visible:outline-ring/20"
+          >
+            <option value="" disabled>Select seniority</option>
+            @for (seniority of seniorities; track seniority) {
+              <option [value]="seniority">{{ seniority }}</option>
+            }
+          </select>
+          @if (registerForm.controls.seniority.invalid && registerForm.controls.seniority.touched) {
+            <span class="text-xs text-destructive" id="seniority-error">Seniority is required.</span>
+          }
+        </div>
+      </div>
+
+      <div class="mb-5 flex flex-col gap-2">
+        <label for="password" class="text-sm font-semibold text-foreground">Password</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          autocomplete="new-password"
+          minlength="8"
+          maxlength="25"
+          [attr.aria-invalid]="registerForm.controls.password.invalid && registerForm.controls.password.touched ? 'true' : null"
+          [attr.aria-describedby]="registerForm.controls.password.invalid && registerForm.controls.password.touched ? 'password-hint password-error' : 'password-hint'"
+          class="min-h-12 w-full rounded-[0.65rem] border border-input bg-background px-3.5 py-3 text-[0.925rem] text-foreground placeholder:text-muted-foreground hover:border-ring focus-visible:border-ring focus-visible:outline-3 focus-visible:outline-offset-1 focus-visible:outline-ring/20 aria-invalid:border-destructive"
+        />
+        <p id="password-hint" class="m-0 text-xs leading-relaxed text-muted-foreground">
+          8–25 characters, including a letter or number and a special character.
+        </p>
+        @if (registerForm.controls.password.invalid && registerForm.controls.password.touched) {
+          <span class="text-xs text-destructive" id="password-error">
+            @if (registerForm.controls.password.hasError('required')) {
+              Password is required.
+            } @else if (registerForm.controls.password.hasError('minlength')) {
+              Password must be at least 8 characters.
+            } @else if (registerForm.controls.password.hasError('maxlength')) {
+              Password must be 25 characters or fewer.
+            } @else if (registerForm.controls.password.hasError('pattern')) {
+              Use letters or numbers and at least one special character, with no spaces.
+            }
+          </span>
+        }
+      </div>
+
+      <div class="mb-6 flex flex-col gap-2">
+        <label for="passwordVerification" class="text-sm font-semibold text-foreground">Verify password</label>
+        <input
+          id="passwordVerification"
+          type="password"
+          formControlName="passwordVerification"
+          autocomplete="new-password"
+          maxlength="25"
+          [attr.aria-invalid]="(registerForm.controls.passwordVerification.invalid || (registerForm.hasError('passwordMismatch') && registerForm.controls.passwordVerification.touched)) ? 'true' : null"
+          [attr.aria-describedby]="(registerForm.controls.passwordVerification.invalid || (registerForm.hasError('passwordMismatch') && registerForm.controls.passwordVerification.touched)) ? 'password-verification-error' : null"
+          class="min-h-12 w-full rounded-[0.65rem] border border-input bg-background px-3.5 py-3 text-[0.925rem] text-foreground placeholder:text-muted-foreground hover:border-ring focus-visible:border-ring focus-visible:outline-3 focus-visible:outline-offset-1 focus-visible:outline-ring/20 aria-invalid:border-destructive"
+        />
+        @if (registerForm.controls.passwordVerification.touched && registerForm.controls.passwordVerification.invalid) {
+          <span class="text-xs text-destructive" id="password-verification-error">
+            Password verification is required.
+          </span>
+        } @else if (registerForm.hasError('passwordMismatch') && registerForm.controls.passwordVerification.touched) {
+          <span class="text-xs text-destructive" id="password-verification-error">
+            Passwords do not match.
+          </span>
+        }
+      </div>
+
+      <button
+        class="min-h-12 w-full rounded-[0.65rem] bg-primary text-[0.95rem] font-bold text-primary-foreground transition hover:-translate-y-px hover:brightness-90 focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-ring disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
+        type="submit"
+        [disabled]="!canRegister()"
+      >
+        {{ isSubmitting() ? 'Registering…' : 'Register' }}
+      </button>
+    </form>
+
+    <p class="mt-6 text-center text-sm text-muted-foreground">
+      Already registered?
+      <a
+        routerLink="/"
+        class="rounded px-1 py-0.5 font-bold text-foreground underline decoration-1 underline-offset-2 focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-ring"
+      >Sign in</a>
+    </p>
+  </section>
+</main>

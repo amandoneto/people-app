@@ -3,6 +3,7 @@ import { provideHttpClientTesting, HttpTestingController } from '@angular/common
 import { provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { environment } from '../../../../environments/environment';
 import { Register } from './register';
 import { routes } from '../../../app.routes';
 
@@ -127,7 +128,7 @@ describe('Register', () => {
     (fixture.nativeElement.querySelector('button[type="submit"]') as HTMLButtonElement).click();
     fixture.detectChanges();
 
-    const request = httpTestingController.expectOne('http://localhost:8080/api/employees');
+    const request = httpTestingController.expectOne(`${environment.API_BASE_URL}employees`);
     expect(request.request.method).toBe('POST');
     expect(request.request.body).toEqual({
       name: 'Alex Smith',
@@ -151,7 +152,7 @@ describe('Register', () => {
     fixture.detectChanges();
 
     httpTestingController
-      .expectOne('http://localhost:8080/api/employees')
+      .expectOne(`${environment.API_BASE_URL}employees`)
       .flush(
         {
           status: 409,
@@ -174,7 +175,7 @@ describe('Register', () => {
     fixture.detectChanges();
 
     httpTestingController
-      .expectOne('http://localhost:8080/api/employees')
+      .expectOne(`${environment.API_BASE_URL}employees`)
       .flush({ status: 500 }, { status: 500, statusText: 'Server Error' });
     fixture.detectChanges();
 

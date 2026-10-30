@@ -12,6 +12,12 @@ ng serve
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
+## Backend API configuration
+
+The frontend uses `API_BASE_URL` from `src/environments/environment.ts` for all backend requests. The Angular browser bundle does not load `.env` files directly; use `.env.example` as the value to apply when configuring the Angular environment for a deployment.
+
+The login endpoint must return a JSON object with `token`, `name`, and `seniority`. It may also include `email` and `role`. The token stays in memory for the active page session and is attached as a Bearer token to subsequent requests to the configured API; refreshing the page requires signing in again.
+
 ## Code scaffolding
 
 Angular CLI includes powerful code scaffolding tools. To generate a new component, run:

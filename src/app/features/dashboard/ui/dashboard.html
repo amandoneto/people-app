@@ -1,0 +1,47 @@
+<main class="mx-auto w-full max-w-5xl px-5 py-10 sm:px-8">
+  @if (user(); as currentUser) {
+    <section aria-labelledby="dashboard-title">
+      <p class="mb-2 text-xs font-bold tracking-[0.13em] text-muted-foreground">YOUR ACCOUNT</p>
+      <h1
+        id="dashboard-title"
+        class="text-[clamp(2rem,6vw,2.75rem)] leading-tight font-bold tracking-[-0.045em] text-foreground"
+      >
+        Welcome, {{ currentUser.name }}
+      </h1>
+      <p class="mt-2 text-muted-foreground">Your account details.</p>
+
+      <section
+        class="mt-8 rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8"
+        aria-labelledby="account-details-title"
+      >
+        <h2 id="account-details-title" class="text-xl font-semibold text-foreground">
+          Account details
+        </h2>
+        <dl class="mt-5 grid gap-5 sm:grid-cols-2">
+          <div>
+            <dt class="text-sm font-medium text-muted-foreground">Name</dt>
+            <dd class="mt-1 text-foreground">{{ currentUser.name }}</dd>
+          </div>
+          @if (currentUser.email) {
+            <div>
+              <dt class="text-sm font-medium text-muted-foreground">Email</dt>
+              <dd class="mt-1 break-all text-foreground">{{ currentUser.email }}</dd>
+            </div>
+          }
+          @if (currentUser.role) {
+            <div>
+              <dt class="text-sm font-medium text-muted-foreground">Role</dt>
+              <dd class="mt-1 text-foreground">{{ currentUser.role }}</dd>
+            </div>
+          }
+          @if (currentUser.seniority) {
+            <div>
+              <dt class="text-sm font-medium text-muted-foreground">Seniority</dt>
+              <dd class="mt-1 text-foreground">{{ currentUser.seniority }}</dd>
+            </div>
+          }
+        </dl>
+      </section>
+    </section>
+  }
+</main>

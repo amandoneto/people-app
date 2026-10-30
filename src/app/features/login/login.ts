@@ -1,6 +1,18 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../core/auth/auth.service';
+
+function getErrorMessage(error: unknown): string {
+  debugger;
+  if (error instanceof HttpErrorResponse && typeof error.error === 'object' && error.error !== null) {
+    const message = (error.error as { message?: unknown }).message;
+    if (typeof message === 'string' && message.trim()) return message;
+  }
+  if (error instanceof Error && error.message) return error.message;
+  return 'Sign in failed. Check your credentials and try again.';
+}
 
 @Component({
   selector: 'app-login',
@@ -10,8 +22,12 @@ import { RouterLink } from '@angular/router';
 })
 export class Login {
   private readonly formBuilder = inject(FormBuilder);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   protected readonly hasSubmitted = signal(false);
+  protected readonly isSubmitting = signal(false);
+  protected readonly submissionError = signal('');
   protected readonly loginForm = this.formBuilder.nonNullable.group({
     email: ['', [Validators.required, Validators.email, Validators.maxLength(150)]],
     password: [
@@ -49,8 +65,22 @@ export class Login {
   protected onSubmit(): void {
     this.hasSubmitted.set(true);
 
-    if (this.loginForm.invalid) {
+    if (this.loginForm.invalid || this.isSubmitting()) {
       this.loginForm.markAllAsTouched();
+      return;
     }
+
+    this.submissionError.set('');
+    this.isSubmitting.set(true);
+    this.authService.login(this.loginForm.getRawValue()).subscribe({
+      next: () => {
+        this.isSubmitting.set(false);
+        void this.router.navigate(['/dashboard']);
+      },
+      error: (error: unknown) => {
+        this.submissionError.set(getErrorMessage(error));
+        this.isSubmitting.set(false);
+      },
+    });
   }
 }

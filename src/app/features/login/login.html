@@ -24,6 +24,15 @@
       </p>
     }
 
+    @if (submissionError()) {
+      <p
+        class="mb-5 rounded-[0.65rem] border border-destructive/30 bg-destructive/10 px-3.5 py-3 text-sm leading-relaxed text-destructive"
+        role="alert"
+      >
+        {{ submissionError() }}
+      </p>
+    }
+
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
       <div class="mb-5 flex flex-col gap-2">
         <label for="email" class="text-sm font-semibold text-foreground">Email address</label>
@@ -86,9 +95,9 @@
       <button
         class="mt-1 min-h-12 w-full rounded-[0.65rem] bg-primary text-[0.95rem] font-bold text-primary-foreground transition hover:-translate-y-px hover:brightness-90 focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-ring disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
         type="submit"
-        [disabled]="loginForm.invalid"
+        [disabled]="loginForm.invalid || isSubmitting()"
       >
-        Sign in
+        {{ isSubmitting() ? 'Signing in…' : 'Sign in' }}
       </button>
     </form>
 
